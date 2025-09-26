@@ -78,3 +78,27 @@ func concat(left, right *Rope) *Rope {
 		weight: left.Length(),
 	}
 }
+
+func (r *Rope) Index(index int) rune {
+	if r.left == nil && r.right == nil {
+		runes := []rune(r.data)
+		if index < 0 || index >= len(runes) {
+			panic("Index out of bounds")
+		}
+
+		return runes[index]
+	}
+
+	if r.weight <= index {
+		return r.right.Index(index - r.weight)
+	}
+	return r.left.Index(index)
+}
+
+func (r *Rope) Substring(start, end int) string {
+	runes := make([]rune, 0, end-start)
+	for i := start; i < end; i++ {
+		runes = append(runes, r.Index(i))
+	}
+	return string(runes)
+}

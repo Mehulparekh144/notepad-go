@@ -7,5 +7,8 @@ run:
 br:
 	go run ./cmd $(ARGS)
 
+debug:
+	dlv debug ./bin/main $(ARGS)
+
 clean:
 	rm -f bin/main

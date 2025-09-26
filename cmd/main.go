@@ -21,14 +21,22 @@ const HELPMENU = `insert <word> : Add text at the end of the document
 cursor reset : Move cursor to the end of the document
 cursor left <num> : Move cursor left by <num> characters
 cursor right <num> : Move cursor right by <num> characters
+undo : Undoes the operation
+redo : Redoes the operation
+test : Test
+save : Saves File
 backspace <num> : Delete <num> characters to the left of cursor
 quit : Exit the text editor`
 
 func main() {
-	editor := NewEditor()
+	editor := NewEditor(10)
 	reader := bufio.NewReader(os.Stdin)
+	editor.LoadFile()
 
 	println("My Editor")
+	fmt.Println("--------Loaded Contents-------")
+	fmt.Println(editor.Content(true))
+	fmt.Println("-----------------------------")
 	println(HELPMENU)
 	for {
 
@@ -98,10 +106,28 @@ func main() {
 				editor.Backspace(chars)
 			}
 			fmt.Println(editor.Content(true))
+		case "undo":
+			editor.Undo()
+			fmt.Println(editor.Content(true))
+		case "redo":
+			editor.Redo()
+			fmt.Println(editor.Content(true))
+		case "test":
+			fmt.Println("Col Size", editor.ColSize)
+			fmt.Println("Row Size", editor.RowSize)
+			editor.Insert("hello")
+			fmt.Println(editor.Content(true))
+			fmt.Println("Col", editor.Cursor.col)
+			fmt.Println("Rol", editor.Cursor.row)
+			editor.Insert("world")
+			fmt.Println(editor.Content(true))
+			fmt.Println("Col", editor.Cursor.col)
+			fmt.Println("Rol", editor.Cursor.row)
+		case "save":
+			editor.SaveBuffer()
 		default:
 			fmt.Println("Invalid Command \n" + HELPMENU)
 			continue
-
 		}
 	}
 
